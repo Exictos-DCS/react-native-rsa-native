@@ -59,7 +59,7 @@ RSA.generate()
           })
         })
 
-    RSA.sign(secret, keys.private)
+    RSA.sign(secret, keys.private, 'SHA512')
       .then(signature => {
         console.log(signature);
 
@@ -91,7 +91,7 @@ RSAKeychain.generate(keyTag)
         })
   })
   .then(() => {
-  return RSAKeychain.sign(secret, keyTag)
+  return RSAKeychain.sign(secret, keyTag, 'SHA512')
     .then(signature => {
       console.log('signature', signature);
 

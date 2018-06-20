@@ -213,34 +213,46 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return clearText;
 }
 
-- (NSString *)sign64:(NSString *)b64message {
+- (NSString *)sign64:(NSString *)b64message withAlgorithm:(NSString *)algorithm {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:b64message options:NSDataBase64DecodingIgnoreUnknownCharacters];
-    NSString *encodedSignature = [self _sign: data];
+    NSString *encodedSignature = [self _sign: data withAlgorithm: algorithm];
     return encodedSignature;
 }
 
-- (NSString *)sign:(NSString *)message {
+- (NSString *)sign:(NSString *)message withAlgorithm:(NSString *)algorithm {
     NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *encodedSignature = [self _sign: data];
+    NSString *encodedSignature = [self _sign: data withAlgorithm: algorithm];
     return encodedSignature;
 }
 
-- (NSString *)_sign:(NSData *)messageBytes {
+- (NSString *)_sign:(NSData *)messageBytes withAlgorithm:(NSString *)algorithm {
     __block NSString *encodedSignature = nil;
 
     void(^signer)(SecKeyRef) = ^(SecKeyRef privateKey) {
-        SecKeyAlgorithm algorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA512;
+        SecKeyAlgorithm secAlgorithm;
+
+        if ([algorithm isEqualToString:@"SHA1"]) {
+            secAlgorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA1;
+        } else if ([algorithm isEqualToString:@"SHA224"]) {
+            secAlgorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA224;
+        } else if ([algorithm isEqualToString:@"SHA256"]) {
+            secAlgorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA256;
+        } else if ([algorithm isEqualToString:@"SHA384"]) {
+            secAlgorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA384;
+        } else {
+            secAlgorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA512;
+        }
 
         BOOL canSign = SecKeyIsAlgorithmSupported(privateKey,
                                                 kSecKeyOperationTypeSign,
-                                                algorithm);
+                                                secAlgorithm);
 
         NSData* signature = nil;
 
         if (canSign) {
             CFErrorRef error = NULL;
             signature = (NSData*)CFBridgingRelease(SecKeyCreateSignature(privateKey,
-                                                                         algorithm,
+                                                                         secAlgorithm,
                                                                          (__bridge CFDataRef)messageBytes,
                                                                          &error));
             if (!signature) {

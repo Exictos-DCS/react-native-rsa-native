@@ -164,8 +164,19 @@ public class RSA {
         return Base64.encodeToString(data, Base64.DEFAULT);
     }
 
-    private String sign(byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
-        Signature privateSignature = Signature.getInstance("SHA512withRSA");
+    private String sign(byte[] messageBytes, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+        Signature privateSignature;
+        if(algorithm.equals("SHA1")) {
+            privateSignature = Signature.getInstance("SHA1withRSA");
+        } else if(algorithm.equals("SHA224")) {
+            privateSignature = Signature.getInstance("SHA224withRSA");
+        } else if(algorithm.equals("SHA256")) {
+            privateSignature = Signature.getInstance("SHA256withRSA");
+        } else if(algorithm.equals("SHA384")) {
+            privateSignature = Signature.getInstance("SHA384withRSA");
+        } else {
+            privateSignature = Signature.getInstance("SHA512withRSA");
+        }
         privateSignature.initSign(this.privateKey);
         privateSignature.update(messageBytes);
         byte[] signature = privateSignature.sign();
@@ -173,15 +184,15 @@ public class RSA {
     }
 
     // b64 message
-    public String sign64(String b64message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+    public String sign64(String b64message, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         byte[] messageBytes = Base64.decode(b64message, Base64.DEFAULT);
-        return sign(messageBytes);
+        return sign(messageBytes, algorithm);
     }
 
     //utf-8 message
-    public String sign(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+    public String sign(String message, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         byte[] messageBytes = message.getBytes(CharsetUTF_8);
-        return sign(messageBytes);
+        return sign(messageBytes, algorithm);
     }
 
     private boolean verify(byte[] signatureBytes, byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {

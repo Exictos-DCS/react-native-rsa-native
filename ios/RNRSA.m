@@ -70,22 +70,22 @@ RCT_EXPORT_METHOD(decrypt64:(NSString *)encodedMessage withKey:(NSString *)key r
 }
 
 
-RCT_EXPORT_METHOD(sign:(NSString *)message withKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(sign:(NSString *)message withKey:(NSString *)key withAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] init];
         rsa.privateKey = key;
-        NSString *signature = [rsa sign:message];
+        NSString *signature = [rsa sign:message withAlgorithm: algorithm];
         resolve(signature);
     });
 }
 
-RCT_EXPORT_METHOD(sign64:(NSString *)message withKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(sign64:(NSString *)message withKey:(NSString *)key withAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] init];
         rsa.privateKey = key;
-        NSString *signature = [rsa sign64:message];
+        NSString *signature = [rsa sign64:message withAlgorithm: algorithm];
         resolve(signature);
     });
 }
@@ -162,11 +162,11 @@ RCT_EXPORT_METHOD(decrypt:(NSString *)encodedMessage withKeyTag:(NSString *)keyT
     });
 }
 
-RCT_EXPORT_METHOD(sign:(NSString *)message withKeyTag:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(sign:(NSString *)message withKeyTag:(NSString *)keyTag withAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
-        NSString *signature = [rsa sign:message];
+        NSString *signature = [rsa sign:message withAlgorithm: algorithm];
         resolve(signature);
     });
 }

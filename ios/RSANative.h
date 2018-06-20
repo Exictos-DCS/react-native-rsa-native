@@ -30,13 +30,13 @@
 - (NSData *)_encrypt:(NSData *)message;
 - (NSData *)_decrypt:(NSData *)encodedMessage;
 
-- (NSString *)sign:(NSString *)message;
+- (NSString *)sign:(NSString *)message withAlgorithm:(NSString *)algorithm;
 - (BOOL)verify:(NSString *)signature withMessage:(NSString *)message;
 
-- (NSString *)sign64:(NSString *)b64message;
+- (NSString *)sign64:(NSString *)b64message withAlgorithm:(NSString *)algorithm;
 - (BOOL)verify64:(NSString *)signature withMessage:(NSString *)b64message;
 
-- (NSString *)_sign:(NSData *)messageBytes;
+- (NSString *)_sign:(NSData *)messageBytes withAlgorithm:(NSString *)algorithm;
 - (BOOL)_verify:(NSData *)signatureBytes withMessage:(NSData *)messageBytes;
 
 @end

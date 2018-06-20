@@ -104,12 +104,12 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
   }
 
     @ReactMethod
-    public void sign(String message, String privateKeyString, Promise promise)  {
+    public void sign(String message, String privateKeyString, String algorithm, Promise promise)  {
 
         try {
             RSA rsa = new RSA();
             rsa.setPrivateKey(privateKeyString);
-            String signature = rsa.sign(message);
+            String signature = rsa.sign(message, algorithm);
             promise.resolve(signature);
 
         } catch(Exception e) {
@@ -118,12 +118,12 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void sign64(String message, String privateKeyString, Promise promise)  {
+    public void sign64(String message, String privateKeyString, String algorithm, Promise promise)  {
 
         try {
             RSA rsa = new RSA();
             rsa.setPrivateKey(privateKeyString);
-            String signature = rsa.sign64(message);
+            String signature = rsa.sign64(message, algorithm);
             promise.resolve(signature);
 
         } catch(Exception e) {
