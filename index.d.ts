@@ -11,8 +11,10 @@ declare module 'react-native-rsa-native' {
 		export function generateKeys(keySize: number): Promise<KeyPair>;
 		export function encrypt(data: string, key: string): Promise<string>;
 		export function decrypt(data: string, key: string): Promise<string>;
-		export function sign(data: string, key: string, algorithm: string): Promise<string>;
+		export function sign(data: string, key: string): Promise<string>;
 		export function verify(data: string, secretToVerify: string, key: string): Promise<boolean>;
+		export function signWithAlgorithm(data: string, key: string, algorithm: string): Promise<string>;
+		export function verifyWithAlgorithm(data: string, secretToVerify: string, key: string, algorithm: string): Promise<boolean>;
 	}
 
 	namespace RSAKeychain {
@@ -20,9 +22,11 @@ declare module 'react-native-rsa-native' {
 		export function deletePrivateKey(keyTag: string): Promise<boolean>;
 		export function encrypt(data: string, keyTag: string): Promise<string>;
 		export function decrypt(data: string, keyTag: string): Promise<string>;
-		export function sign(data: string, keyTag: string, algorithm: string): Promise<string>;
+		export function sign(data: string, keyTag: string): Promise<string>;
 		export function verify(data: string, secretToVerify: string, keyTag: string): Promise<boolean>;
 		export function getPublicKey(keyTag: string): Promise<string | undefined>;
+		export function signWithAlgorithm(data: string, key: string, algorithm: string): Promise<string>;
+		export function verifyWithAlgorithm(data: string, secretToVerify: string, key: string, algorithm: string): Promise<boolean>;
 	}
 
 	export { RSA, RSAKeychain };
