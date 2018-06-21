@@ -112,11 +112,11 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void sign(String message, String keyTag, String algorithm, Promise promise)  {
+    public void sign(String message, String keyTag, Promise promise)  {
 
         try {
             RSA rsa = new RSA(keyTag);
-            String signature = rsa.sign(message, algorithm);
+            String signature = rsa.sign(message);
             promise.resolve(signature);
 
         } catch(Exception e) {
@@ -125,11 +125,38 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void sign64(String message, String keyTag, String algorithm, Promise promise)  {
+    public void sign64(String message, String keyTag, Promise promise)  {
 
         try {
             RSA rsa = new RSA(keyTag);
-            String signature = rsa.sign64(message, algorithm);
+            String signature = rsa.sign64(message);
+            promise.resolve(signature);
+
+        } catch(Exception e) {
+            promise.reject("Error", e.getMessage());
+        }
+    }
+
+
+    @ReactMethod
+    public void signWithAlgorithm(String message, String keyTag, String algorithm, Promise promise)  {
+
+        try {
+            RSA rsa = new RSA(keyTag);
+            String signature = rsa.signWithAlgorithm(message, algorithm);
+            promise.resolve(signature);
+
+        } catch(Exception e) {
+            promise.reject("Error", e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void sign64WithAlgorithm(String message, String keyTag, String algorithm, Promise promise)  {
+
+        try {
+            RSA rsa = new RSA(keyTag);
+            String signature = rsa.sign64WithAlgorithm(message, algorithm);
             promise.resolve(signature);
 
         } catch(Exception e) {
@@ -156,6 +183,32 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
         try {
             RSA rsa = new RSA(keyTag);
             boolean verified = rsa.verify64(signature, message);
+            promise.resolve(verified);
+
+        } catch(Exception e) {
+            promise.reject("Error", e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void verifyWithAlgorithm(String signature, String message, String keyTag, String algorithm, Promise promise)  {
+
+        try {
+            RSA rsa = new RSA(keyTag);
+            boolean verified = rsa.verifyWithAlgorithm(signature, message, algorithm);
+            promise.resolve(verified);
+
+        } catch(Exception e) {
+            promise.reject("Error", e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void verify64WithAlgorithm(String signature, String message, String keyTag, String algorithm, Promise promise)  {
+
+        try {
+            RSA rsa = new RSA(keyTag);
+            boolean verified = rsa.verify64WithAlgorithm(signature, message, algorithm);
             promise.resolve(verified);
 
         } catch(Exception e) {

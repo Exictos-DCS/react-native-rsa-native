@@ -70,22 +70,42 @@ RCT_EXPORT_METHOD(decrypt64:(NSString *)encodedMessage withKey:(NSString *)key r
 }
 
 
-RCT_EXPORT_METHOD(sign:(NSString *)message withKey:(NSString *)key withAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(sign:(NSString *)message withKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] init];
         rsa.privateKey = key;
-        NSString *signature = [rsa sign:message withAlgorithm: algorithm];
+        NSString *signature = [rsa sign:message];
         resolve(signature);
     });
 }
 
-RCT_EXPORT_METHOD(sign64:(NSString *)message withKey:(NSString *)key withAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(signWithAlgorithm:(NSString *)message withKey:(NSString *)key andAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] init];
         rsa.privateKey = key;
-        NSString *signature = [rsa sign64:message withAlgorithm: algorithm];
+        NSString *signature = [rsa signWithAlgorithm:message andAlgorithm:algorithm];
+        resolve(signature);
+    });
+}
+
+RCT_EXPORT_METHOD(sign64:(NSString *)message withKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RSANative *rsa = [[RSANative alloc] init];
+        rsa.privateKey = key;
+        NSString *signature = [rsa sign64:message];
+        resolve(signature);
+    });
+}
+
+RCT_EXPORT_METHOD(sign64WithAlgorithm:(NSString *)message withKey:(NSString *)key andAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RSANative *rsa = [[RSANative alloc] init];
+        rsa.privateKey = key;
+        NSString *signature = [rsa sign64WithAlgorithm:message andAlgorithm:algorithm];
         resolve(signature);
     });
 }
@@ -100,12 +120,32 @@ RCT_EXPORT_METHOD(verify:(NSString *)signature withMessage:(NSString *)message a
     });
 }
 
+RCT_EXPORT_METHOD(verifyWithAlgorithm:(NSString *)signature withMessage:(NSString *)message andKey:(NSString *)key andAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RSANative *rsa = [[RSANative alloc] init];
+        rsa.publicKey = key;
+        BOOL valid = [rsa verifyWithAlgorithm:signature withMessage:message andAlgorithm: algorithm];
+        resolve(@(valid));
+    });
+}
+
 RCT_EXPORT_METHOD(verify64:(NSString *)signature withMessage:(NSString *)message andKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] init];
         rsa.publicKey = key;
         BOOL valid = [rsa verify64:signature withMessage:message];
+        resolve(@(valid));
+    });
+}
+
+RCT_EXPORT_METHOD(verify64:(NSString *)signature withMessage:(NSString *)message andKey:(NSString *)key andAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RSANative *rsa = [[RSANative alloc] init];
+        rsa.publicKey = key;
+        BOOL valid = [rsa verify64WithAlgorithm:signature withMessage:message andAlgorithm: algorithm];
         resolve(@(valid));
     });
 }
@@ -162,11 +202,20 @@ RCT_EXPORT_METHOD(decrypt:(NSString *)encodedMessage withKeyTag:(NSString *)keyT
     });
 }
 
-RCT_EXPORT_METHOD(sign:(NSString *)message withKeyTag:(NSString *)keyTag withAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(sign:(NSString *)message withKeyTag:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
-        NSString *signature = [rsa sign:message withAlgorithm: algorithm];
+        NSString *signature = [rsa sign:message];
+        resolve(signature);
+    });
+}
+
+RCT_EXPORT_METHOD(signWithAlgorithm:(NSString *)message withKey:(NSString *)keyTag andAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+        NSString *signature = [rsa signWithAlgorithm:message andAlgorithm: algorithm];
         resolve(signature);
     });
 }
@@ -176,6 +225,15 @@ RCT_EXPORT_METHOD(verify:(NSString *)signature withMessage:(NSString *)message a
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
         BOOL valid = [rsa verify:signature withMessage:message];
+        resolve(@(valid));
+    });
+}
+
+RCT_EXPORT_METHOD(verifyWithAlgorithm:(NSString *)signature withMessage:(NSString *)message andKeyTag:(NSString *)keyTag andAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+        BOOL valid = [rsa verifyWithAlgorithm:signature withMessage:message andAlgorithm: algorithm];
         resolve(@(valid));
     });
 }
