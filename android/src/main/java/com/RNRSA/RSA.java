@@ -164,7 +164,7 @@ public class RSA {
         return Base64.encodeToString(data, Base64.DEFAULT);
     }
 
-    private Signature getSignature(String algorithm) {
+    private Signature getSignature(String algorithm) throws NoSuchAlgorithmException {
         if(algorithm.equals("SHA1")) {
             return Signature.getInstance("SHA1withRSA");
         } else if(algorithm.equals("SHA224")) {
