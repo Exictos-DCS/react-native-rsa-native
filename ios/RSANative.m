@@ -234,6 +234,8 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
             algorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA512;
         } else if ([signAlgorithm isEqualToString: @"SHA256withRSA"]) {
             algorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA256;
+        } else if ([signAlgorithm isEqualToString: @"SHA1withRSA"]) {
+            algorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA1;
         }
 
         BOOL canSign = SecKeyIsAlgorithmSupported(privateKey,
